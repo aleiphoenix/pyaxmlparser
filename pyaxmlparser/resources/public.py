@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+import logging
 import os
 from xml.dom import minidom
 
@@ -18,18 +20,35 @@ if _public_res is None:
                     _public_res[_type] = {}
                 _public_res[_type][_name] = _id
     else:
-        raise Exception("need to copy the sdk/platforms/android-?/data/res/values/public.xml here")
+        logging.getLogger(__name__).warning("need to copy the sdk/platforms/android-?/data/res/values/public.xml here")
 
-SYSTEM_RESOURCES = {
-    "attributes": {
-        "forward": {k: v for k, v in _public_res['attr'].items()},
-        "inverse": {v: k for k, v in _public_res['attr'].items()}
-    },
-    "styles": {
-        "forward": {k: v for k, v in _public_res['style'].items()},
-        "inverse": {v: k for k, v in _public_res['style'].items()}
+SYSTEM_RESOURCES = {}
+
+if _public_res:
+    SYSTEM_RESOURCES = {
+        "attributes": {
+            "forward": {k: v for k, v in _public_res['attr'].items()},
+            "inverse": {v: k for k, v in _public_res['attr'].items()}
+        },
+        "styles": {
+            "forward": {k: v for k, v in _public_res['style'].items()},
+            "inverse": {v: k for k, v in _public_res['style'].items()}
+        }
     }
-}
+
+
+def rebuild_resources():
+    global SYSTEM_RESOURCES
+    SYSTEM_RESOURCES = {
+        "attributes": {
+            "forward": {k: v for k, v in _public_res['attr'].items()},
+            "inverse": {v: k for k, v in _public_res['attr'].items()}
+        },
+        "styles": {
+            "forward": {k: v for k, v in _public_res['style'].items()},
+            "inverse": {v: k for k, v in _public_res['style'].items()}
+        }
+    }
 
 
 if __name__ == '__main__':
